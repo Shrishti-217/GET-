@@ -4,6 +4,7 @@ import { Recruiter } from '../Pages/Recruiter_navigation';
 import { Recruiter_Page } from '../Pages/Recruiter_Page';
 import { JobOpeningPage } from '../Pages/jobOpeningPage';
 import { CandidatePage } from '../Pages/candidatePage';
+import path from 'path';
 
 let candidateFullName: string; 
 
@@ -76,14 +77,14 @@ test.describe('Recruiter Portal Test', () => {
         recruiterTab.waitForTimeout(3000) 
 
         // Save the candidate's full name for tagging
-        candidateFullName = `${randomFirstName} ${randomLastName}`; // Store candidate full name in the global variable
+        candidateFullName = `${randomFirstName} ${randomLastName}`; 
     });
 
     test('should tag candidate to the first job role on the 1st page and navigate to profile', async () => {
-        const [recruiterTab] = await context.pages().slice(-1); // Get the recruiter tab
+        const [recruiterTab] = await context.pages().slice(-1);
 
         jobOpeningPage = new JobOpeningPage(recruiterTab);
-        await jobOpeningPage.navigateToJobOpenings(); // Navigate to Job Openings
+        await jobOpeningPage.navigateToJobOpenings(); 
         await recruiterTab.waitForLoadState('load');
         await jobOpeningPage.selectFirstJob();
 
@@ -111,12 +112,17 @@ test.describe('Recruiter Portal Test', () => {
         await candidatePage.fillSubject();
         await candidatePage.navigateToDocumentsTab();
         await candidatePage.upload_bttn();
+        await candidatePage.menu_bttn();
+        await candidatePage.edit_bttn(); 
+        await candidatePage.select_category();
+        await candidatePage.resume_option(); 
+        await candidatePage.update_bttn();
+        await candidatePage.submit_btn(); 
+
     });
 
-    test('Upload a file', async ({ page }) => {
-        const fileInput = await page.locator('input[type="file"]');
-        await fileInput.setInputFiles("C:\\Users\\Bug_Hunter13\\Downloads\\image (80).png");
-    });
+
+    
     
 
     
