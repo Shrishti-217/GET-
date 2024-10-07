@@ -1,0 +1,37 @@
+# config:
+#   target: 'https://new-qa2-recruiter.getglobalgroup.com'  
+#   phases:
+#     - duration: 60  
+#       arrivalRate: 5  
+
+#   plugins:
+#     playwright: 
+#       use: 'playwright/test' 
+#       headless: true 
+
+# scenarios:
+#   - name: "Recruiter Portal Load Test"
+#     flow:
+#       - post:  
+#           url: "/login"
+#           json:
+#             email: "124_employee@mailinator.com"
+#             password: "Pass@1234"
+#       - function: log_in_and_navigate  
+
+config:
+  target: 'https://new-qa2-deployer.getglobalgroup.com'  # The base URL for your application
+  phases:
+    - duration: 60  # Duration of the test in seconds
+      arrivalRate: 5  # Number of users arriving per second
+  # http:
+  #   timeout: 30  # Timeout for requests
+  processor: './tests-examples/playwright-scripts.ts'  # Adjust the path to your Playwright script
+
+scenarios:
+  - flow:
+      - post:
+          url: '/login'  # The endpoint for the login action
+          json:
+            username: '124_employee@mailinator.com'
+            password: 'Pass@1234'
