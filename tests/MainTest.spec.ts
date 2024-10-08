@@ -118,16 +118,25 @@ test.describe('Recruiter Portal Test', () => {
         await candidatePage.resume_option(); 
         await candidatePage.update_bttn();
         await candidatePage.submit_btn(); 
+        await candidatePage.Menu_btn2();
+        await candidatePage.complete_activity();
+        await candidatePage.Complete_act_subject();
+        await candidatePage.Complete_act_commchannel();
+        await candidatePage.chat_optn()
 
+        // Get the frame by its selector
+const frame = await page.frame({ name: 'mceu_249' }); 
+// Fill the input field inside the frame
+    
     });
-
-
-    
-    
 
     
     // test.afterAll(async () => {
     //     await context.close();
     // });
+
 });
+    
+
+
 

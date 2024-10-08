@@ -20,6 +20,11 @@ export class CandidatePage {
     readonly resume: Locator;
     readonly update_button: Locator;
     readonly submit_button: Locator;
+    readonly menu_button2: Locator;
+    readonly Complete_act: Locator;
+    readonly Complete_act_sub: Locator;
+    readonly Complete_act_communicationChannel: Locator;
+    readonly chat_option: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -40,7 +45,11 @@ export class CandidatePage {
         this.resume = page.getByRole('option', { name: 'Resume' });
         this.update_button = page.getByLabel('SAVE');
         this.submit_button = page.getByRole('button', { name: 'Tag to Role' });
-       
+        this.menu_button2 = page.locator("//mat-card-title[contains(@class,'matCardTitle')]/div[2]/button");
+        this.Complete_act = page.locator('button[app-permissions-required="update-job-opening-consultant-transactions"][role="menuitem"] span.ng-star-inserted:has-text("Complete")');
+        this.Complete_act_sub = page. getByLabel('Subject');
+        this.Complete_act_communicationChannel = page.getByRole('img');
+        this.chat_option = page.getByText('Chat');
     }
 
     
@@ -132,6 +141,31 @@ await fileChooser.setFiles(path.join(__dirname, '../fixtures/image.png'));
         await this.submit_button.click()
     }
 
-   
+
+    async Menu_btn2(){
+        await this.menu_button2.click()
+    }
+
+
+    async complete_activity(){
+        await this.Complete_act.click()
+    }
+
+
+    async Complete_act_subject(){
+        await this.Complete_act_sub.fill("Test")
+    }
+    
+
+    async Complete_act_commchannel(){
+        await this.Complete_act_communicationChannel.click()
+    }
+    
+
+    async chat_optn(){
+        await this.chat_option.click()
+    }
+
 }
+
 
