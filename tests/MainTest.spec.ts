@@ -8,7 +8,7 @@ import path from 'path';
 
 let candidateFullName: string; 
 
-test.describe('Recruiter Portal Test', () => {
+test.describe.serial('Recruiter Portal Test', () => {
     let context: BrowserContext;
     let page: Page;
     let login: loginPage;
@@ -70,7 +70,7 @@ test.describe('Recruiter Portal Test', () => {
 
         // Wait for the "Create" button to be visible before clicking
         const createButton = await recruiterTab.getByRole('button', { name: 'Create' });
-        await createButton.waitFor({ state: 'visible' });
+        await expect(createButton).toBeVisible();
         await createButton.click();
 
         await expect(recruiterTab.locator('text=Consultant created successfully')).toBeVisible({ timeout: 5000 });
@@ -112,23 +112,45 @@ test.describe('Recruiter Portal Test', () => {
         await candidatePage.fillSubject();
         await candidatePage.navigateToDocumentsTab();
         await candidatePage.upload_bttn();
-        await candidatePage.menu_bttn();
+        await candidatePage.menu_bttn(); 
         await candidatePage.edit_bttn(); 
         await candidatePage.select_category();
         await candidatePage.resume_option(); 
         await candidatePage.update_bttn();
-        await candidatePage.submit_btn(); 
+        await candidatePage.submit_btn();
         await candidatePage.Menu_btn2();
         await candidatePage.complete_activity();
         await candidatePage.Complete_act_subject();
         await candidatePage.Complete_act_commchannel();
         await candidatePage.chat_optn()
+        await recruiterTab.waitForLoadState('load');
+        await candidatePage.fill_notes();
+        await candidatePage.validate_and_complete_button();
 
-        // Get the frame by its selector
-const frame = await page.frame({ name: 'mceu_249' }); 
-// Fill the input field inside the frame
-    
     });
+
+        
+
+    // test('For 2nd Recruiter actiity', async () => {
+    //     const [recruiterTab] = await context.pages().slice(-1);
+
+    //     // Click on the menu and logout using the methods provided in loginPage
+    //     await login.Menu_locator();
+    //     await login.Logout_bttn();
+
+    //     // Confirm the user is logged out by checking the login URL
+    //     await expect(recruiterTab).toHaveURL('https://new-stage2-deployer.getglobalgroup.com/login');
+    //     await login.navigateToLoginPage();  
+    //     await login.email.fill('107_employee@mailinator.com'); 
+    //     await login.password.fill('Pass@12345');  
+    //     await login.clickLoginButton();  
+        
+    //     // Confirm the user is logged in by checking for the welcome page
+    //     await expect(login.WelcomePage).toBeVisible();
+        
+       
+    // });
+
 
     
     // test.afterAll(async () => {

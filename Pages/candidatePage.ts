@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test"; // Import Locator
+import { Page, Locator, expect } from "@playwright/test"; // Import Locator
 import * as path from 'path';
 
 export class CandidatePage {
@@ -25,6 +25,11 @@ export class CandidatePage {
     readonly Complete_act_sub: Locator;
     readonly Complete_act_communicationChannel: Locator;
     readonly chat_option: Locator;
+    readonly validate_and_complete: Locator;
+    readonly iframe: Locator;
+    readonly iframe_input: Locator;
+    readonly validate_and_complete_bttn: Locator;
+
 
     constructor(page: Page) {
         this.page = page;
@@ -42,14 +47,18 @@ export class CandidatePage {
         this.menu_button = page.getByRole('button', { name: 'more' });
         this.edit_button = page.getByRole('menuitem', { name: 'Edit' });
         this.category_field = page.getByLabel('Select Category').locator('span');
-        this.resume = page.getByRole('option', { name: 'Resume' });
+        this.resume = page.locator('mat-option:has-text("Resume")');
         this.update_button = page.getByLabel('SAVE');
         this.submit_button = page.getByRole('button', { name: 'Tag to Role' });
         this.menu_button2 = page.locator("//mat-card-title[contains(@class,'matCardTitle')]/div[2]/button");
-        this.Complete_act = page.locator('button[app-permissions-required="update-job-opening-consultant-transactions"][role="menuitem"] span.ng-star-inserted:has-text("Complete")');
-        this.Complete_act_sub = page. getByLabel('Subject');
-        this.Complete_act_communicationChannel = page.getByRole('img');
-        this.chat_option = page.getByText('Chat');
+        this.Complete_act = page.locator('button:has-text("Complete")');
+        this.Complete_act_sub = page.locator('[formcontrolname="subject"]');
+        this.Complete_act_communicationChannel = page.getByLabel('Communication Channel').locator('div').first();
+        this.chat_option = page.getByRole('option', { name: 'Chat' });
+        this.validate_and_complete = page.locator('button:has-text("VALIDATE & COMPLETE")');
+        this.iframe = page.locator('iframe[title]').contentFrame().locator('#tinymce');
+        this.iframe_input = page.locator('iframe[title]').contentFrame().locator('#tinymce');
+        this.validate_and_complete_bttn = page.locator('button:has-text("VALIDATE & COMPLETE")');
     }
 
     
@@ -130,6 +139,7 @@ await fileChooser.setFiles(path.join(__dirname, '../fixtures/image.png'));
     }
 
     async resume_option(){
+        await this.page.waitForTimeout(3000);0
         await this.resume.click() 
     }
 
@@ -143,13 +153,17 @@ await fileChooser.setFiles(path.join(__dirname, '../fixtures/image.png'));
 
 
     async Menu_btn2(){
+        await expect(this.menu_button2).toBeVisible();
         await this.menu_button2.click()
     }
 
 
-    async complete_activity(){
-        await this.Complete_act.click()
+    async complete_activity() {
+        const completeButton = this.Complete_act;
+        await completeButton.waitFor({ state: 'visible', timeout: 5000 }); // Wait until visible
+        await completeButton.click(); 
     }
+    
 
 
     async Complete_act_subject(){
@@ -158,12 +172,29 @@ await fileChooser.setFiles(path.join(__dirname, '../fixtures/image.png'));
     
 
     async Complete_act_commchannel(){
+        this.page.waitForTimeout(3000)
         await this.Complete_act_communicationChannel.click()
     }
     
 
     async chat_optn(){
         await this.chat_option.click()
+    }
+
+
+    async Validate_and_complete_bttn(){
+        await this.validate_and_complete.click()
+    }
+
+
+    async fill_notes(){
+        await this.iframe.click();
+        await this.iframe_input.fill("Test")
+    }
+
+
+    async validate_and_complete_button(){
+        await this.validate_and_complete_bttn.click()
     }
 
 }

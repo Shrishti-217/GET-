@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 
 export class JobOpeningPage {
     readonly page: Page;
@@ -11,10 +11,12 @@ export class JobOpeningPage {
         this.job_openings_menu = page.locator('a[href="/job-openings"]'); 
         this.first_job_atPage = page.locator('//a[@app-permissions-required="job-openings-details"]').first()
         this.tag_candidate_button = page.getByRole('button', { name: 'Tag Candidate' })
+        
     }
 
     
     async navigateToJobOpenings() {
+        await expect(this.job_openings_menu).toBeVisible(); 
         await this.job_openings_menu.click();
         await this.page.waitForLoadState('load');
     }
