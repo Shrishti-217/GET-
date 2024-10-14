@@ -189,7 +189,7 @@ await fileChooser.setFiles(path.join(__dirname, '../fixtures/image.png'));
 
     async fill_notes(){
         await this.iframe.click();
-        await this.iframe_input.fill("Test")
+        await this.iframe_input.fill("Test123  ")
     }
 
 

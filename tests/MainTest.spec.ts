@@ -26,21 +26,24 @@ test.describe.serial('Recruiter Portal Test', () => {
         jobOpeningPage = new JobOpeningPage(page);
         candidatePage = new CandidatePage(page); 
 
-        
+        // Navigate to login page and perform login actions
         await login.navigateToLoginPage();
         await login.enterEmail();
         await login.enterPassword();
         await login.clickLoginButton();
 
-      
+        // Ensure the user is logged in by checking visibility of the Welcome page
         await expect(login.WelcomePage).toBeVisible();
     });
 
     test('should login and navigate to recruiter dashboard', async () => {
+        // Confirm that the user is on the apps page
         await expect(page).toHaveURL('https://new-stage2-deployer.getglobalgroup.com/apps');
 
+        // Navigate to recruiter dashboard
         await recruiter.navigate_recruiter();
-        
+
+        // Wait for the new page and ensure it's the recruiter's dashboard
         const [recruiterTab] = await Promise.all([
             context.waitForEvent('page'),
             recruiter.recruiter_optn() 
@@ -68,16 +71,15 @@ test.describe.serial('Recruiter Portal Test', () => {
         await recruiterTab.getByLabel('Email Address', { exact: true }).fill(randomEmail);
         await recruiterTab.locator('#mat-input-9').fill(randomPhone);
 
-        // Wait for the "Create" button to be visible before clicking
+        // Click on "Create" button and confirm candidate creation
         const createButton = await recruiterTab.getByRole('button', { name: 'Create' });
         await expect(createButton).toBeVisible();
         await createButton.click();
+        await expect(recruiterTab.locator('text=consultant created successfully')).toBeVisible({ timeout: 5000 });
+        recruiterTab.waitForTimeout(3000);
 
-        await expect(recruiterTab.locator('text=Consultant created successfully')).toBeVisible({ timeout: 5000 });
-        recruiterTab.waitForTimeout(3000) 
-
-        // Save the candidate's full name for tagging
-        candidateFullName = `${randomFirstName} ${randomLastName}`; 
+        // Save the candidate's full name for later use
+        candidateFullName = `${randomFirstName} ${randomLastName}`;
     });
 
     test('should tag candidate to the first job role on the 1st page and navigate to profile', async () => {
@@ -92,73 +94,64 @@ test.describe.serial('Recruiter Portal Test', () => {
         candidatePage = new CandidatePage(recruiterTab);
         await recruiterTab.waitForLoadState('load');
         await candidatePage.clickTagCandidate();
-        
 
-        // Search for the recently created candidate using the stored full name
+        // Search for the newly created candidate
         await candidatePage.searchCandidate(candidateFullName); 
 
-        // Wait for search results to appear and tag the candidate
+        // Wait for search results and tag the candidate
         const candidateLocator = recruiterTab.locator(`text=${candidateFullName}`); 
-        await candidateLocator.waitFor({ state: 'visible', timeout: 10000 }); 
-        await candidateLocator.click(); 
+        await candidateLocator.waitFor({ state: 'visible', timeout: 10000 });
+        await candidateLocator.click();
         await candidatePage.tagCandidateToRole();
 
-        // Navigate to the candidate's profile
+        // Navigate to the candidate's profile and complete various actions
         await candidatePage.clickCandidateProfile();
-        await candidatePage. navigateToJobOpeningsTab();
+        await candidatePage.navigateToJobOpeningsTab();
         await candidatePage.Activity_navigation();
         await candidatePage.ClickThreeDots();
         await candidatePage.TagToRole_Bttn();
         await candidatePage.fillSubject();
         await candidatePage.navigateToDocumentsTab();
         await candidatePage.upload_bttn();
-        await candidatePage.menu_bttn(); 
-        await candidatePage.edit_bttn(); 
+        await candidatePage.menu_bttn();
+        await candidatePage.edit_bttn();
         await candidatePage.select_category();
-        await candidatePage.resume_option(); 
+        await candidatePage.resume_option();
         await candidatePage.update_bttn();
         await candidatePage.submit_btn();
         await candidatePage.Menu_btn2();
         await candidatePage.complete_activity();
         await candidatePage.Complete_act_subject();
         await candidatePage.Complete_act_commchannel();
-        await candidatePage.chat_optn()
+        await candidatePage.chat_optn();
         await recruiterTab.waitForLoadState('load');
         await candidatePage.fill_notes();
         await candidatePage.validate_and_complete_button();
-
     });
 
-        
 
-    // test('For 2nd Recruiter actiity', async () => {
-    //     const [recruiterTab] = await context.pages().slice(-1);
-
-    //     // Click on the menu and logout using the methods provided in loginPage
-    //     await login.Menu_locator();
+    // test('For 2nd activity for Recruiter on the same page', async () => {
+    //     // Ensure all actions are done on the current page
+    //     await recruiter.Nav_menu();
     //     await login.Logout_bttn();
-
-    //     // Confirm the user is logged out by checking the login URL
-    //     await expect(recruiterTab).toHaveURL('https://new-stage2-deployer.getglobalgroup.com/login');
-    //     await login.navigateToLoginPage();  
-    //     await login.email.fill('107_employee@mailinator.com'); 
-    //     await login.password.fill('Pass@12345');  
-    //     await login.clickLoginButton();  
-        
-    //     // Confirm the user is logged in by checking for the welcome page
-    //     await expect(login.WelcomePage).toBeVisible();
-        
-       
+    //     await expect(page).toHaveURL('https://new-stage2-deployer.getglobalgroup.com/login');
     // });
 
+    test('For 2nd Recruiter activity', async () => {
+        // Get the current active page 
+        const pages = context.pages();
+        const recruiterTab = pages[pages.length - 1]; 
 
-    
-    // test.afterAll(async () => {
-    //     await context.close();
-    // });
+        await recruiter.Nav_menu();
+        await login.Logout_bttn();
+        await expect(recruiterTab).toHaveURL('https://new-stage2-deployer.getglobalgroup.com/login');
+
+        await login.navigateToLoginPage();
+        await login.email.fill('107_employee@mailinator.com');
+        await login.password.fill('Pass@12345');
+        await login.clickLoginButton();
+
+        await expect(login.WelcomePage).toBeVisible();
+    });
 
 });
-    
-
-
-

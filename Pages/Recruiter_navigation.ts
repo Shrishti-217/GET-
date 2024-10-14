@@ -5,10 +5,20 @@ export class Recruiter {
     readonly navigate_toRecruiter: Locator;
     readonly recruiter_option: Locator;
 
+    //For 2nd activity of Recruiter:
+    readonly menuForNavigation: Locator;
+
+
+
+
     constructor(page: Page) {
         this.page = page;
         this.navigate_toRecruiter = page.locator('.get-head-menu');
         this.recruiter_option = page.locator('[href="https://new-stage2-recruiter.getglobalgroup.com/"]');
+
+        //For 2nd activity of Recruiter:
+        this.menuForNavigation = page.locator("//button[contains(@class, 'dropbtn') and contains(@style, 'imgpsh_fullsize_anim.png')]");
+
     }
 
     
@@ -28,4 +38,12 @@ export class Recruiter {
     async recruiter_optn() {
         await this.recruiter_option.click();
     }
+
+
+    //For 2nd activity of Recruiter:
+
+    async Nav_menu(){
+        await this.menuForNavigation.click();
+    }
+
 }

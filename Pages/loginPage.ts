@@ -20,7 +20,7 @@ export class loginPage {
 
         //For 2nd Activity of recruiter with ID "devesh sharma" 
         this.menu_Locator = page.locator('.get-head-menu');
-        this.logout_button = page.locator('a.log-btn:has-text("Logout")');
+        this.logout_button = page.getByText('Logout');
     }
 
    
